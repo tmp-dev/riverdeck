@@ -1,0 +1,13 @@
+{
+  "name": "riverdeck",
+  "version": "0.0.1",
+  "description": "River Deck, cross platform stream deck alternative.",
+  "repository": "git@github.com:tmp-dev/riverdeck.git",
+  "author": "Ian Wijma <ian@wij.ma>",
+  "license": "GNU Affero General Public License v3.0",
+  "private": false,
+  "scripts": {},
+  "dependencies": {
+    "electron": "^11.3.0"
+  }
+}
