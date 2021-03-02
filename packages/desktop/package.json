@@ -1,0 +1,19 @@
+{
+  "name": "@riverdeck/desktop",
+  "main": "src/index.js",
+  "dependencies": {
+    "@riverdeck/common": "*"
+  },
+  "peerDependencies": {
+    "ts-node": "^9.1.1",
+    "cross-env": "^7.0.3",
+    "wait-port": "^0.2.9",
+    "nodemon": "^2.0.7",
+    "electron": "^12.0.0"
+  },
+  "scripts": {
+    "start": "wait-port 3000 && nodemon",
+    "build": "tsc -p ./tsconfig.json",
+    "test": "echo 'TODO'"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "restartable": "rs",
+  "ignore": [".git"],
+  "execMap": {
+    "js": "cross-env ELECTRON_ENV=development electron ./src/index.js"
+  },
+  "watch": ["src/**/*.ts", "src/*.ts"]
+}
