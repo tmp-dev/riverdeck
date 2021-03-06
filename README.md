@@ -1,2 +1,2 @@
 # riverdeck
-River Deck, cross platform stream deck alternative
+River Deck, cross platform stream deck alternative.
