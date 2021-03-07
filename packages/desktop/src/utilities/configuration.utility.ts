@@ -2,8 +2,8 @@ import { homedir } from 'os';
 import { resolve } from 'path';
 import { APPLICATION_NAME } from '@riverdeck/common';
 import { ensureFile, pathExists, readFile, writeFile } from 'fs-extra';
-import { config } from 'process';
 import { stringify, parse } from 'yaml';
+import { get, set, has } from 'lodash';
 
 class AbstractConfig {
     protected fileName = 'config.yml';
@@ -37,24 +37,50 @@ class AbstractConfig {
         return null;
     }
 
-    async load(): Promise<void>
-    {
+    private async getConfigFile() {
         const configDir = await this.getConfigDir();
         let configFile;
         if (configDir) {
-            configFile = resolve(configDir, this.fileName);   
+            configFile = resolve(configDir, this.fileName);
         } else {
             configFile = resolve(this.getDefaultConfigDir(), this.fileName);
             await ensureFile(configFile);
-            await writeFile(configFile, stringify(this.configDefaults));
+            await writeFile(configFile, stringify(this.configDefaults), 'utf8');
         }
+        return configFile;
+    }
 
+    async load(): Promise<void>
+    {
+        let configFile = await this.getConfigFile();
         const content = await readFile(configFile, 'utf8');
         this.data = parse(content);
     }
 
-    getData() {
-        return this.data
+    async save(): Promise<void>
+    {
+        if (!this.data) {
+            this.data = this.configDefaults;
+        }
+        let configFile = await this.getConfigFile();
+        await writeFile(configFile, parse(this.data), 'utf8');
+    }
+
+    async get(path: string, defaultValue: any) {
+        await this.load();
+        return get(this.data, path, defaultValue);
+    }
+
+    async set(path: string, value: any) {
+        await this.load();
+        const result = set(this.data, path, value);
+        await this.save();
+        return result;
+    }
+
+    async has(path: string) {
+        await this.load();
+        return has(this.data, path);
     }
 }
 
