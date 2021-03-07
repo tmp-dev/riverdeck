@@ -1,7 +1,8 @@
-import fastly, {FastifyInstance} from 'fastify';
+import fastify, {FastifyInstance} from 'fastify';
 import isDev from '../utilities/isDev.utility';
 import { DEFAULT_PORT, DEFAULT_CONNECTION_STRING } from '@riverdeck/common';
-import { pingFn } from '../utilities/api.utility';
+import { authenticateFn, pingFn, validateJwt } from '../utilities/api.utility';
+import { serverConfig } from '../utilities/configuration.utility';
 
 export default class ApiProcess {
 
@@ -17,20 +18,21 @@ export default class ApiProcess {
         return this.instance;
     }
 
-    private fastly: FastifyInstance;
+    private fastify: FastifyInstance;
 
     constructor() {
-        this.fastly = this.getApi();
+        this.fastify = this.getApi();
         this.setupRouters();
     }
 
     async start(): Promise<void>
     {
-        await this.fastly.listen(DEFAULT_PORT, '0.0.0.0');
+        const port = await serverConfig.get('port', DEFAULT_PORT);
+        await this.fastify.listen(port, '0.0.0.0');
     }
 
     private getApi(): FastifyInstance {
-        return fastly({ 
+        return fastify({ 
             logger: isDev,
             ignoreTrailingSlash: true,
             bodyLimit: 1e+7 // 10MB
@@ -38,12 +40,15 @@ export default class ApiProcess {
     }
 
     private setupRouters(): void {
-        this.fastly.get('/ping', pingFn);
+        this.fastify.get('/ping', pingFn);
+        this.fastify.post('/verify', {preHandler:[validateJwt]}, pingFn);
+        this.fastify.post('/authenticate', authenticateFn);
     }
 
     async restart(): Promise<void> {
-        await this.fastly.close();
-        await this.fastly.listen(DEFAULT_PORT, '0.0.0.0');
+        await this.fastify.close();
+        const port = await serverConfig.get('port', DEFAULT_PORT);
+        await this.fastify.listen(port, '0.0.0.0');
     }
 
 }

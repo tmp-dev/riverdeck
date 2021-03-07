@@ -66,9 +66,13 @@ class AbstractConfig {
         await writeFile(configFile, parse(this.data), 'utf8');
     }
 
-    async get(path: string, defaultValue: any) {
+    async get(path: string, defaultValue: any = null) {
         await this.load();
-        return get(this.data, path, defaultValue);
+        const result = get(this.data, path, defaultValue);
+        if (result !== null && result === defaultValue) {
+            await this.set(path, defaultValue);
+        }
+        return result;
     }
 
     async set(path: string, value: any) {
