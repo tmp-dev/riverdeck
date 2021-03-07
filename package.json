@@ -4,6 +4,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "start": "lerna run start",
+    "build": "lerna run build"
+  },
   "devDependencies": {
     "lerna": "^3.22.1"
   },
@@ -13,6 +17,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "electron": "^12.0.0",
+    "fastify": "^3.13.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
