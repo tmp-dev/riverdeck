@@ -1,10 +1,18 @@
 import { homedir } from 'os';
 import { resolve } from 'path';
 import { APPLICATION_NAME } from '@riverdeck/common';
-import { ensureFile, pathExists } from 'fs-extra';
+import { ensureFile, pathExists, readFile, writeFile } from 'fs-extra';
+import { config } from 'process';
+import { stringify, parse } from 'yaml';
 
 class AbstractConfig {
     protected fileName = 'config.yml';
+
+    protected configDefaults = {
+        'version': '1.0.0'
+    }
+    
+    protected data: any = null;
 
     protected getDefaultConfigDir(): string
     {
@@ -32,32 +40,62 @@ class AbstractConfig {
     async load(): Promise<void>
     {
         const configDir = await this.getConfigDir();
+        let configFile;
         if (configDir) {
-            const configFile = resolve(configDir, this.fileName);   
+            configFile = resolve(configDir, this.fileName);   
         } else {
-            const configFile = resolve(this.getDefaultConfigDir(), this.fileName);
-            ensureFile(configFile);
-            // TODO: write example file
+            configFile = resolve(this.getDefaultConfigDir(), this.fileName);
+            await ensureFile(configFile);
+            await writeFile(configFile, stringify(this.configDefaults));
         }
 
-        // TODO: Load file
+        const content = await readFile(configFile, 'utf8');
+        this.data = parse(content);
     }
 
-    // TODO: Write config getters and setters.
+    getData() {
+        return this.data
+    }
 }
 
 class DeviceConfig extends AbstractConfig {
     protected fileName = 'device.yml';
 
+    protected configDefaults = {
+        'version': '1.0.0'
+    }
+    
+    protected data: {
+        version:string,
+        deviceName:string,
+    }|null = null;
+
+
 }
 
 class ServerConfig extends AbstractConfig {
     protected fileName = 'server.yml';
+
+    protected configDefaults = {
+        'version': '1.0.0'
+    }
+    
+    protected data: {
+        version:string
+    }|null = null;
     
 }
 
 class ClientConfig extends AbstractConfig {
     protected fileName = 'client.yml';
+
+    protected configDefaults = {
+        'version': '1.0.0'
+    }
+    
+    protected data: {
+        version:string
+    }|null = null;
     
 }
 
