@@ -1,15 +1,18 @@
+import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import ThemeSwitcherButton from '../Buttons/theme-switcher.button';
 
 export const deviceName = '/';
 
-export default function SetupRouter () {
+export default function SetupRouter() {
   const match = useRouteMatch();
   return (
     <Switch>
       <Route path={match.url + deviceName}>
-        <h1>Device name</h1>
+        <Typography>Device name</Typography>
+        <ThemeSwitcherButton />
       </Route>
     </Switch>
-  )
+  );
 }
