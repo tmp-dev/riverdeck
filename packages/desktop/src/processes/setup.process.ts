@@ -1,4 +1,4 @@
-import { DEFAULT_PORT } from '@riverdeck/common/src';
+import { DEV_FRONTEND_PORT } from '@riverdeck/common';
 import { BrowserWindow } from 'electron';
 import isDev from '../components/isDev.component';
 import installExtention, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
@@ -44,7 +44,7 @@ export default class SetupProcess {
   private async startCommon(): Promise<void> {}
 
   private async startDev(): Promise<void> {
-    await this.window.loadURL(`https://0.0.0.0:${DEFAULT_PORT}/setup`);
+    await this.window.loadURL(`http://0.0.0.0:${DEV_FRONTEND_PORT}/setup`);
     await installExtention(REACT_DEVELOPER_TOOLS);
     this.window.webContents.openDevTools();
   }
