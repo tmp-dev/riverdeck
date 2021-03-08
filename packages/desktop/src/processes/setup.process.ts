@@ -1,6 +1,6 @@
 import { DEFAULT_PORT } from '@riverdeck/common/src';
 import { BrowserWindow } from 'electron';
-import isDev from '../utilities/isDev.utility';
+import isDev from '../components/isDev.component';
 import installExtention, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { resolve } from 'path';
 

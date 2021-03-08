@@ -4,5 +4,5 @@
     "module": "CommonJS",
     "outDir": "../../build/desktop"
   },
-  "include": ["src"]
+  "include": ["src", "../common/src/interfaces/singleton.interface.ts", "../common/src/components/config.component.ts"]
 }
